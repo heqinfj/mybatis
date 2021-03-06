@@ -15,12 +15,13 @@
  */
 package org.apache.ibatis.plugin;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class PluginTest {
 
@@ -38,6 +39,20 @@ class PluginTest {
     assertNotEquals("Always", map.toString());
   }
 
+  /**
+   * 静态初始化：初始化时由程序员显式指定每个数组元素的初始值，由系统决定数组的长度；
+   * 方式1：type[] arrayName = new type[]{element1,element2,element3...}
+   * 示例：
+   * int[] intArr;
+   * intArr = new int[]{1,2,3,4,5,9};
+   * <p>
+   * 方式2：简化的静态初始化方式
+   * type[] arrayName = {element1,element2,element3...};
+   * 示例：
+   * String[] strArr = {"张三","李四","王二麻"};
+   *
+   * @see Intercepts 的方法Signature[] value()的指定值下面使用的是java简化的静态初始化
+   */
   @Intercepts({
       @Signature(type = Map.class, method = "get", args = {Object.class})})
   public static class AlwaysMapPlugin implements Interceptor {

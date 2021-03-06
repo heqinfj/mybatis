@@ -18,6 +18,7 @@ package org.apache.ibatis.plugin;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.AbstractCollection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -102,6 +103,24 @@ public class Plugin implements InvocationHandler {
             }
             type = type.getSuperclass();
         }
+        /**
+         *interfaces.toArray 下面使用的是java数组的动态初始化：new Class<?>[0] 初始的数组长度为0
+         *动态初始化：初始化时由程序员指定数组的长度，由系统初始化每个数组元素的默认值。
+         *type[] arrayName = new type[length];
+         *示例：
+         *int[] price = new int[4];
+         */
+        /**
+         * 觉得此处的new Class<?>[0] 写成 new Class<?>[interfaces.size()] 会减少歧义；
+         * new Class<?>[0]初始的数组长度为0，居然够对interfaces集合进行转储的原因在于：
+         * @see AbstractCollection  toArray(T[] a)方法
+         * AbstractCollection中重写toArray方法中对数组的长度根据集合的大小进行调整，如下代码：
+         *         // Estimate size of array; be prepared to see more or fewer elements
+         *         int size = size();
+         *         T[] r = a.length >= size ? a :
+         *                   (T[])java.lang.reflect.Array
+         *                   .newInstance(a.getClass().getComponentType(), size);
+         */
         return interfaces.toArray(new Class<?>[0]);
     }
 

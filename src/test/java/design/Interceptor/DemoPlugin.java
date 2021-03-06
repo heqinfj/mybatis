@@ -12,6 +12,13 @@ import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
+/**
+ * @Intercepts的值此处使用的是java静态初始化
+ * 简化的静态初始化方式 type[] arrayName = {element1,element2,element3...};
+ * 示例：
+ * String[] strArr = {"张三","李四","王二麻"};
+ *
+ */
 @Intercepts({
         @Signature(type = Executor.class, method = "query", args = {
                 MappedStatement.class, Object.class, RowBounds.class,

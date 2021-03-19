@@ -55,8 +55,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class DefaultResultSetHandlerTest {
 
+  //生成Mock对象方式 - 使用 @Mock 注解方式 - 前提：单元测试类上加上 @ExtendWith(MockitoExtension.class) 注解
   @Mock
   private Statement stmt;
+
   @Mock
   private ResultSet rs;
   @Mock
@@ -70,6 +72,14 @@ class DefaultResultSetHandlerTest {
    * Contrary to the spec, some drivers require case-sensitive column names when getting result.
    *
    * @see <a href="https://github.com/mybatis/old-google-code-issues/issues/557">Issue 557</a>
+   *
+   * 在我们的项目中引入Mockito测试框架依赖，基于Maven构建的项目引入如下依赖：
+   * <dependency>
+   *   <groupId>org.mockito</groupId>
+   *   <artifactId>mockito-core</artifactId>
+   *   <version>3.5.13</version>
+   *   <scope>test</scope>
+   * </dependency>
    */
   @Test
   void shouldRetainColumnNameCase() throws Exception {
@@ -80,16 +90,27 @@ class DefaultResultSetHandlerTest {
     final ParameterHandler parameterHandler = null;
     final ResultHandler resultHandler = null;
     final BoundSql boundSql = null;
-    final RowBounds rowBounds = new RowBounds(0, 100);
+    final RowBounds rowBounds = new RowBounds(0, 200);
     final DefaultResultSetHandler fastResultSetHandler = new DefaultResultSetHandler(executor, ms, parameterHandler, resultHandler, boundSql, rowBounds);
 
+    //使用 Mockito 框架提供的一些调用行为定义，Mockito 提供了 when(...).thenXXX(...) 来让我们定义方法调用行为;
+    //以下代码定义了调用stmt的getResultSet()方法的返回结果是rs对象；
     when(stmt.getResultSet()).thenReturn(rs);
+
     when(rs.getMetaData()).thenReturn(rsmd);
     when(rs.getType()).thenReturn(ResultSet.TYPE_FORWARD_ONLY);
-    when(rs.next()).thenReturn(true).thenReturn(false);
+
+    //以下代码定义当调用rs的next()方法时，第1次返回结果为true，第2次返回结果为true，第3次返回结果为false  -- 就是resultSet（结果集）的大小为2；
+    when(rs.next()).thenReturn(true).thenReturn(true).thenReturn(false);
+
+    //以下代码定义当调用rs的getInt方法并传入参数CoLuMn1时的返回结果为100；
     when(rs.getInt("CoLuMn1")).thenReturn(100);
+
     when(rsmd.getColumnCount()).thenReturn(1);
+
+    //定义当我们调用rsmd的getColumnLabel方法并传入参数1时的返回结果为CoLuMn1;
     when(rsmd.getColumnLabel(1)).thenReturn("CoLuMn1");
+
     when(rsmd.getColumnType(1)).thenReturn(Types.INTEGER);
     when(rsmd.getColumnClassName(1)).thenReturn(Integer.class.getCanonicalName());
     when(stmt.getConnection()).thenReturn(conn);
@@ -97,7 +118,7 @@ class DefaultResultSetHandlerTest {
     when(dbmd.supportsMultipleResultSets()).thenReturn(false); // for simplicity.
 
     final List<Object> results = fastResultSetHandler.handleResultSets(stmt);
-    assertEquals(1, results.size());
+    assertEquals(2, results.size());
     assertEquals(100, ((HashMap) results.get(0)).get("cOlUmN1"));
   }
 

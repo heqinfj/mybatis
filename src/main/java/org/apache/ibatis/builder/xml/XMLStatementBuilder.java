@@ -114,7 +114,7 @@ public class XMLStatementBuilder extends BaseBuilder {
         if (resultSetTypeEnum == null) {
             resultSetTypeEnum = configuration.getDefaultResultSetType();
         }
-        String keyProperty = context.getStringAttribute("LanguageDriver");
+        String keyProperty = context.getStringAttribute("keyProperty");
         String keyColumn = context.getStringAttribute("keyColumn");
         String resultSets = context.getStringAttribute("resultSets");
 

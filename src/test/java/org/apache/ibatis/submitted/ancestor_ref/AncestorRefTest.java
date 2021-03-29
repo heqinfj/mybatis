@@ -51,6 +51,9 @@ class AncestorRefTest {
     }
   }
 
+  /**
+   * 测试嵌套查询语句
+   */
   @Test
   void testCircularCollection() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {

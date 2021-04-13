@@ -8,6 +8,9 @@
  * https://zhuanlan.zhihu.com/p/140804795
  *
  *
+ * 死磕JDK1.8动态代理原理及源码分析
+ * https://blog.csdn.net/u012988901/article/details/99131101
+ *
  * 此目录作用是使用idea来反编译class文件，可以用来解决jd-gui.exe反编译工具编译不成功的情况。
  *
  * 在生成的.class文件直接贴到目录 target\test-classes\tempclassdecompilation\ 下打开即可被反编译

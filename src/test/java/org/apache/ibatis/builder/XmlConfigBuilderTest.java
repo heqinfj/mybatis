@@ -23,7 +23,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.io.StringReader;
 import java.math.RoundingMode;
 import java.sql.CallableStatement;
@@ -32,6 +34,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.ibatis.builder.mapper.CustomMapper;
@@ -57,6 +61,9 @@ import org.apache.ibatis.session.AutoMappingUnknownColumnBehavior;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.LocalCacheScope;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.EnumOrdinalTypeHandler;
@@ -310,6 +317,33 @@ class XmlConfigBuilderTest {
     @SuppressWarnings("unused")
     public static String provideSql() {
       return "SELECT 1";
+    }
+  }
+
+  /**
+   * mybatis插件测试
+   * @throws Exception
+   */
+  @Test
+  public void demoPluginTest() throws Exception {
+
+    String resource = "org/apache/ibatis/builder/CustomizedSettingsMapperConfig.xml";
+    /*try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+      Properties props = new Properties();
+      props.put("prop2", "cccc");
+      XMLConfigBuilder builder = new XMLConfigBuilder(inputStream, null, props);
+      Configuration config = builder.parse();
+
+      ExamplePlugin plugin = (ExamplePlugin) config.getInterceptors().get(0);
+      assertThat(plugin.getProperties().size()).isEqualTo(1);
+      assertThat(plugin.getProperties().getProperty("pluginProperty")).isEqualTo("100");
+    }*/
+
+    try (Reader reader = Resources.getResourceAsReader(resource)) {
+      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+      SqlSession sqlSession = sqlSessionFactory.openSession(false);
+      BlogMapper blogMapper = sqlSession.getMapper(BlogMapper.class);
+      List<Map> list = blogMapper.selectAllPosts();
     }
   }
 

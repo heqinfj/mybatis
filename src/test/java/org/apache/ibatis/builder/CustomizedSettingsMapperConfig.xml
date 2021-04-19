@@ -50,7 +50,7 @@
     <setting name="defaultScriptingLanguage" value="org.apache.ibatis.scripting.defaults.RawLanguageDriver"/>
     <setting name="callSettersOnNulls" value="true"/>
     <setting name="logPrefix" value="mybatis_"/>
-    <setting name="logImpl" value="SLF4J"/>
+    <setting name="logImpl" value="SLF4J"/><!-- 可选的值有：SLF4J、LOG4J、LOG4J2、JDK_LOGGING、COMMONS_LOGGING、STDOUT_LOGGING、NO_LOGGING -->
     <setting name="vfsImpl" value="org.apache.ibatis.io.JBoss6VFS"/>
     <setting name="configurationFactory" value="java.lang.String"/>
     <setting name="defaultEnumTypeHandler" value="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
@@ -81,9 +81,27 @@
   <reflectorFactory type="org.apache.ibatis.builder.CustomReflectorFactory"/>
 
   <plugins>
+    <!--
     <plugin interceptor="org.apache.ibatis.builder.ExamplePlugin">
       <property name="pluginProperty" value="100"/>
+    </plugin>-->
+
+    <!--
+    <plugin interceptor="design.Interceptor.DemoPlugin1">
+      <property name="logLevel" value="1"/>
     </plugin>
+    <plugin interceptor="design.Interceptor.DemoPlugin2">
+      <property name="logLevel" value="1"/>
+    </plugin>
+    <plugin interceptor="design.Interceptor.DemoPlugin3">
+      <property name="logLevel" value="1"/>
+    </plugin>
+    -->
+
+    <plugin interceptor="design.Interceptor.MonitorInterceptor"/>
+    <!--<plugin interceptor="design.Interceptor.SqlStaticsPlugin"/>-->
+    <plugin interceptor="design.Interceptor.SqlExecuteTimeCountInterceptor"/>
+
   </plugins>
 
   <environments default="development">

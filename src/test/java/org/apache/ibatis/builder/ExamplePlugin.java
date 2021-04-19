@@ -17,18 +17,30 @@ package org.apache.ibatis.builder;
 
 import java.util.Properties;
 
+import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Plugin;
+import org.apache.ibatis.plugin.Signature;
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.RowBounds;
 
-@Intercepts({})
+@Intercepts({
+        @Signature(type = Executor.class, method = "query", args = {
+                MappedStatement.class, Object.class, RowBounds.class,
+                ResultHandler.class})
+})
 public class ExamplePlugin implements Interceptor {
   private Properties properties;
 
   @Override
   public Object intercept(Invocation invocation) throws Throwable {
-    return invocation.proceed();
+    System.out.println(String.format("%s before intercept...",this.getClass().getName()));
+    Object proceed = invocation.proceed();
+    System.out.println(String.format("%s after intercept...",this.getClass().getName()));
+    return proceed;
   }
 
   @Override

@@ -46,6 +46,7 @@ public class Plugin implements InvocationHandler {
         // 这里的getSignatureMap()方法会解析@Signature注解，得到要拦截的类以及要拦截的方法集合
         Map<Class<?>, Set<Method>> signatureMap = getSignatureMap(interceptor);
         Class<?> type = target.getClass();
+        //System.err.println("type: " + type.toString());
         // 检查当前传入的target对象是否为@Signature注解要拦截的类型，如果是的话，就
         // 使用JDK动态代理的方式创建代理对象
         Class<?>[] interfaces = getAllInterfaces(type, signatureMap);

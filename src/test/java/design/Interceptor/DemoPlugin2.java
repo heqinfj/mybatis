@@ -1,16 +1,15 @@
 package design.Interceptor;
 
-import java.util.Properties;
-
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
-import org.apache.ibatis.plugin.Plugin;
 import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+
+import java.util.Properties;
 
 /**
  * @Intercepts的值此处使用的是java静态初始化
@@ -25,7 +24,7 @@ import org.apache.ibatis.session.RowBounds;
                 ResultHandler.class}),
         @Signature(type = Executor.class, method = "close", args = {boolean.class})
 })
-public class DemoPlugin implements Interceptor {
+public class DemoPlugin2 implements Interceptor {
 
     private int logLevel;
 
@@ -45,6 +44,6 @@ public class DemoPlugin implements Interceptor {
     @Override
     public void setProperties(Properties properties) {
         logLevel = Integer.valueOf(properties.getProperty("logLevel","9999"));
-        System.out.println(String.format("logLevel=%s",logLevel));
+        //System.out.println(String.format("logLevel=%s",logLevel));
     }
 }
